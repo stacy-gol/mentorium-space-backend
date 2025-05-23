@@ -1,0 +1,108 @@
+
+openapi: 3.0.0
+info:
+  title: Mentorium API
+  description: API для платформы mentorium.space (каталог коучей, менторов, супервизоров)
+  version: 1.0.0
+servers:
+  - url: http://localhost:4000/api
+
+paths:
+  /auth/register:
+    post:
+      summary: Регистрация пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+      responses:
+        '201':
+          description: Успешная регистрация
+
+  /auth/login:
+    post:
+      summary: Авторизация пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        '200':
+          description: Успешный вход
+
+  /profiles/{id}:
+    get:
+      summary: Получить профиль по ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+    put:
+      summary: Обновить профиль
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Profile'
+      responses:
+        '200':
+          description: Обновлено
+
+components:
+  schemas:
+    UserRegister:
+      type: object
+      required: [email, password, role]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          enum: [client, coach, mentor, supervisor]
+
+    UserLogin:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    Profile:
+      type: object
+      properties:
+        name:
+          type: string
+        bio:
+          type: string
+        specialization:
+          type: array
+          items:
+            type: string
+        experienceYears:
+          type: integer
+        role:
+          type: string
